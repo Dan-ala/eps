@@ -8,7 +8,7 @@ router.post('/create', userController.register);
 router.post('/login', userController.login);
 
 // Rutas protegidas
-router.get('/', verifyToken, authorizeRoles(['admin']), userController.getAllUsers);
+router.get('/', verifyToken, authorizeRoles(['admin', 'provider']), userController.getAllUsers);
 router.get('/:usersId', verifyToken, authorizeRoles(['admin']), userController.getUserById);
 router.put('/:id', verifyToken, authorizeRoles(['admin', 'patient', 'provider']), userController.getUserUpdate);
 router.delete('/delete/:usersId', verifyToken, authorizeRoles(['admin']), userController.getUserDelete);
