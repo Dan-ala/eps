@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = {};
 
 User.findAll = (result) => {
-    const sql = `SELECT usersId, email, name, lastname, image, phone, role, password FROM users`;
+    const sql = `SELECT usersId, email, name, lastname, image, phone, role FROM users`;
     db.query(sql, (err, users) => {
         if (err) {
             console.log('Error al listar usuarios: ', err);
@@ -16,7 +16,7 @@ User.findAll = (result) => {
 };
 
 User.findById = (id, result) => {
-    const sql = `SELECT usersId, email, name, lastname, image, phone, role, password FROM users WHERE usersId = ?`;
+    const sql = `SELECT usersId, email, name, lastname, image, phone, role FROM users WHERE usersId = ?`;
     
     console.log('Final check: ID received by model:', id, 'Type:', typeof id);
     

@@ -1,5 +1,4 @@
 const db = require('../config/config')
-const bcrypt = require('bcryptjs');
 const Provider = {};
 
 Provider.findAll = (r) => {
@@ -15,16 +14,38 @@ Provider.findAll = (r) => {
     });
 }
 
-Provider.findByEmail = (email, result) => {
-    const sql = `SELECT providerId, usersId, specialty, email FROM providers WHERE usersId.email = ?`;
-    db.query(sql, [email], (err, user) => {
+Provider.findByUserId = (id, result) => {
+    const sql = `SELECT * FROM providers WHERE usersId = ?`;
+
+    db.query(sql, [id], (err, provider) => {
         if (err) {
-            console.log('Error al consultar: ', err);
-            result(err, null);
+            return result(err, null);
         }
-        else {
-            console.log('Usuario consultado: ',  user[0] );
-            result(null, user[0]);
-        }
+        
+        // Return the profile object if found, otherwise return null
+        return result(null, provider.length ? provider[0] : null); 
     });
 };
+
+Provider.create = async (user, result) => {
+    const sql = `INSERT INTO providers(
+                    usersId, 
+                    specialty
+                ) VALUES (?,?)`;
+    db.query(sql,
+        [
+            user.usersId,
+            user.specialty,
+        ], (err, res) => {
+            if (err) {
+                console.log('Error al crear al Doctor: ', err);
+                result(err, null);
+            } else {
+                console.log('Doctor creado: ', {providerId: res.insertId, ...user});
+                result(null, {providerId: res.insertId, ...user});
+            }
+        }
+    );
+};
+
+module.exports = Provider;

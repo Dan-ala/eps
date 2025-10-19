@@ -3,6 +3,7 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
 const usersRoutes = require('./routes/userRoutes');
+const providersRoutes = require('./routes/providerRoutes')
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cors());
 
 // Rutas
 app.use('/api/users', usersRoutes);
+app.use('/api/providers', providersRoutes);
 
 // Endpoints de prueba
 app.get('/', (req, res) => {
