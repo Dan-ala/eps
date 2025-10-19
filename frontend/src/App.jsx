@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom"
 import Signin from "./components/Signin"
 
 
@@ -5,7 +6,10 @@ function App() {
 
   return (
     <>
-    <Signin/>
+    <main>
+      <Signin/>
+      <Outlet/>
+    </main>
     </>
   )
 }
