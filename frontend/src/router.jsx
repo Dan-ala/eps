@@ -8,6 +8,7 @@ import Signup from './components/Signup';
 import PatientsTable from './components/Patients/PatientsTable';
 import ProvidersTable from './components/Doctors/ProvidersTable';
 import AssignSpecialty from './components/Doctors/AssignSpecialty';
+import AdminEditForm from './components/Admin/AdminEditForm';
 
 export const router = createBrowserRouter([
     // 1. PUBLIC ROUTES
@@ -60,4 +61,13 @@ export const router = createBrowserRouter([
             </AdminRoute>
         )
     },
+    {
+        path: '/admin/edit/:usersId',
+        element: (
+        <AdminRoute>
+            <Navbar/>
+            <AdminEditForm />  {/* Use your new component here */}
+        </AdminRoute>
+)
+    }
 ]);
