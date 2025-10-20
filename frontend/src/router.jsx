@@ -7,8 +7,8 @@ import Navbar from './layout/Navbar';
 import Signup from './components/Signup';
 import PatientsTable from './components/Patients/PatientsTable';
 import ProvidersTable from './components/Doctors/ProvidersTable';
-import AssignSpecialty from './components/Doctors/AssignSpecialty';
 import AdminEditForm from './components/Admin/AdminEditForm';
+import PatientEditForm from './components/Patients/PatientsEditForm';
 
 export const router = createBrowserRouter([
     // 1. PUBLIC ROUTES
@@ -54,20 +54,21 @@ export const router = createBrowserRouter([
         )
     },
     {
-        path: '/admin/link-provider',
-        element: (
-            <AdminRoute>
-                <AssignSpecialty/>
-            </AdminRoute>
-        )
-    },
-    {
         path: '/admin/edit/:usersId',
         element: (
         <AdminRoute>
             <Navbar/>
             <AdminEditForm />  {/* Use your new component here */}
         </AdminRoute>
-)
-    }
+        )
+    },
+    {
+        path: '/admin/patients/link', 
+        element: (
+            <AdminRoute>
+                <Navbar/>
+                <PatientEditForm /> 
+            </AdminRoute>
+        )
+    },
 ]);

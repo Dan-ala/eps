@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const AdminEditForm = () => {
+const PatientEditForm = () => {
     // Get the user ID from the URL parameter (matching :usersId in your route)
     const { usersId } = useParams(); 
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ const AdminEditForm = () => {
         email: '',
         phone: '',
         image: '',
-        role: 'admin', // Ensure the role remains 'admin'
+        role: 'patient', // Role is defaulted and fixed to 'patient'
         password: '', // Kept empty, only sent if user types a new one
     });
     const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ const AdminEditForm = () => {
     const token = localStorage.getItem('userToken');
 
     // ------------------------------------------------------------------
-    // 1. FETCH ADMIN DATA ON COMPONENT LOAD
+    // 1. FETCH PATIENT DATA ON COMPONENT LOAD
     // ------------------------------------------------------------------
     useEffect(() => {
         if (!token) {
@@ -33,7 +33,7 @@ const AdminEditForm = () => {
             return;
         }
 
-        const fetchAdminData = async () => {
+        const fetchPatientData = async () => {
             try {
                 // API Call: GET /api/users/:usersId
                 const response = await axios.get(`/api/users/${usersId}`, {
@@ -42,30 +42,29 @@ const AdminEditForm = () => {
                     }
                 });
 
-                const adminData = response.data.data;
+                const patientData = response.data.data;
 
                 // Load existing data into the form state
                 setFormData({
-                    name: adminData.name || '',
-                    lastname: adminData.lastname || '',
-                    email: adminData.email || '',
-                    phone: adminData.phone || '',
-                    image: adminData.image || '',
-                    role: adminData.role || 'admin',
+                    name: patientData.name || '',
+                    lastname: patientData.lastname || '',
+                    email: patientData.email || '',
+                    phone: patientData.phone || '',
+                    image: patientData.image || '',
+                    role: patientData.role || 'patient',
                     password: '', // Keep password empty
                 });
                 setLoading(false);
 
             } catch (err) {
-                const errMsg = err.response?.data?.message || 'Error al cargar los datos del administrador.';
+                const errMsg = err.response?.data?.message || 'Error al cargar los datos del paciente.';
                 setError(errMsg);
                 setLoading(false);
                 Swal.fire('Error', errMsg, 'error');
-                // Optional: navigate('/dashboard') to escape
             }
         };
 
-        fetchAdminData();
+        fetchPatientData();
     }, [usersId, navigate, token]);
 
     // ------------------------------------------------------------------
@@ -82,6 +81,7 @@ const AdminEditForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // 1. Prepare data: Filter out empty password if not being changed
         const dataToUpdate = { ...formData, usersId: usersId };
         if (dataToUpdate.password === '') {
             delete dataToUpdate.password;
@@ -99,15 +99,15 @@ const AdminEditForm = () => {
             Swal.fire({
                 icon: 'success',
                 title: '¡Actualizado!',
-                text: 'El administrador ha sido actualizado con éxito.',
+                text: 'El paciente ha sido actualizado con éxito.',
                 confirmButtonText: 'Aceptar'
             });
 
-            // Redirect back to the admin table (assuming it's available from a dashboard link)
-            navigate('/dashboard'); 
+            // Redirect back to the patients table
+            navigate('/admin/patients'); 
 
         } catch (err) {
-            const errMsg = err.response?.data?.message || 'Error al actualizar el administrador.';
+            const errMsg = err.response?.data?.message || 'Error al actualizar el paciente.';
             Swal.fire({
                 icon: 'error',
                 title: 'Error de Actualización',
@@ -121,7 +121,7 @@ const AdminEditForm = () => {
     // ------------------------------------------------------------------
 
     if (loading) {
-        return <div className="text-center mt-12 text-xl text-indigo-600">Cargando datos del administrador...</div>;
+        return <div className="text-center mt-12 text-xl text-indigo-600">Cargando datos del paciente...</div>;
     }
 
     if (error) {
@@ -130,7 +130,7 @@ const AdminEditForm = () => {
 
     return (
         <div className="max-w-xl mx-auto p-6 bg-white shadow-xl rounded-lg mt-10">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">Editar Administrador (ID: {usersId})</h2>
+            <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">Editar Paciente (ID: {usersId})</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 
                 {/* Name */}
@@ -220,7 +220,7 @@ const AdminEditForm = () => {
                 <div className="flex justify-end space-x-4 pt-4">
                     <button
                         type="button"
-                        onClick={() => navigate('/dashboard')}
+                        onClick={() => navigate('/admin/patients')}
                         className="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                         Cancelar
@@ -237,4 +237,4 @@ const AdminEditForm = () => {
     );
 };
 
-export default AdminEditForm;
+export default PatientEditForm;

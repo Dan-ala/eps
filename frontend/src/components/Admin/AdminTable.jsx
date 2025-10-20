@@ -73,14 +73,12 @@ const AdminTable = () => {
             }
 
             try {
-                // The backend route is DELETE /api/users/delete/:usersId
                 await axios.delete(`/api/users/delete/${adminId}`, {
                     headers: {
                         'Authorization': `${token}`
                     }
                 });
-
-                // Update the state to remove the deleted admin without re-fetching all data
+                
                 setAdmins(prevAdmins => prevAdmins.filter(admin => admin.usersId !== adminId));
 
                 Swal.fire(

@@ -44,18 +44,7 @@ Provider.findByUserId = (id, result) => {
 Provider.findUsersWithoutSpecialty = (result) => {
     // Busca usuarios con rol 'provider' que NO tienen un registro en la tabla 'providers'
     const sql = `
-SELECT 
-    u.usersId,
-    u.name,
-    u.lastname,
-    u.email,
-    u.phone
-FROM 
-    users u
-LEFT JOIN 
-    providers p ON u.usersId = p.usersId
-WHERE 
-    p.providerId IS NULL
+SELECT u.usersId, u.name, u.lastname, u.email, u.phone FROM users u LEFT JOIN providers p ON u.usersId = p.usersId WHERE p.providerId IS NULL and role = "provider";
 `;
     
     db.query(sql, (err, users) => {

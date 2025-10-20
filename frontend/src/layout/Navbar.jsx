@@ -21,7 +21,6 @@ function Navbar() {
     const adminLinks = [
         { name: 'Pacientes', path: '/admin/patients' },
         { name: 'Doctores', path: '/admin/providers' },
-        { name: 'Vincular Proveedor', path: '/admin/link-provider' }, // Link for the API endpoint you worked on
     ];
 
     const providerLinks = [
