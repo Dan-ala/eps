@@ -9,6 +9,7 @@ import PatientsTable from './components/Patients/PatientsTable';
 import ProvidersTable from './components/Doctors/ProvidersTable';
 import AdminEditForm from './components/Admin/AdminEditForm';
 import PatientEditForm from './components/Patients/PatientsEditForm';
+import Appointments from './components/Appointments/Appointments'
 
 export const router = createBrowserRouter([
     // 1. PUBLIC ROUTES
@@ -71,4 +72,14 @@ export const router = createBrowserRouter([
             </AdminRoute>
         )
     },
+
+    {
+        path: '/appointments',
+        element: (
+            <AdminRoute>
+                <Navbar/>
+                <Appointments/>
+            </AdminRoute>
+    )
+    }
 ]);
