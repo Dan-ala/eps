@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AdminTable from './Admin/AdminTable';
+import PatientsTable from './Patients/PatientsTable';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -20,10 +22,14 @@ const Dashboard = () => {
     // --- Content Helper Components ---
 
     const AdminContent = () => (
+        <>
+        <h1 className="text-3xl font-bold mb-6">Dashboard Principal</h1>
         <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-semibold text-red-600">Panel de Administración</h3>
             <p>Gestión de usuarios y accesos.</p>
+            <AdminTable/>
         </div>
+        </>
     );
     
     const ProviderContent = () => (
@@ -39,7 +45,11 @@ const Dashboard = () => {
     const renderContent = () => {
         switch (userRole) {
             case 'admin':
-                return <AdminContent />;
+                return (
+                <>
+                    <AdminContent />
+                </>
+            );
             case 'provider':
                 return <ProviderContent />;
             // Add other elevated roles (e.g., 'superadmin', 'manager') here
@@ -55,7 +65,6 @@ const Dashboard = () => {
 
     return (
         <div className="p-8">
-            <h1 className="text-3xl font-bold mb-6">Dashboard Principal</h1>
             {renderContent()}
         </div>
     );

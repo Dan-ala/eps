@@ -48,6 +48,10 @@ const Signin = () => {
         }
     };
 
+    const signup = () =>{
+        navigate(`/signup`);
+    }
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="p-8 bg-white shadow-xl rounded-lg w-full max-w-md">
@@ -83,6 +87,14 @@ const Signin = () => {
                         {loading ? 'Cargando...' : 'Entrar'}
                     </button>
                 </form>
+<br />
+                <button
+                onClick={signup}
+                        className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'}`}
+                        disabled={loading}
+                    >
+                        Registrarse
+                    </button>
 
                 {message && (
                     <p className={`mt-4 text-center text-sm ${message.startsWith('Fallo') ? 'text-red-600' : 'text-green-600'}`}>

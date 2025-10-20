@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 const AdminRoute = ({ children }) => {
 
-    const ALLOWED_ROLES = ['admin', 'provider'];
+    const ALLOWED_ROLES = ['admin', 'provider','patient'];
     
     const token = localStorage.getItem('userToken');
     const role = localStorage.getItem('userRole');

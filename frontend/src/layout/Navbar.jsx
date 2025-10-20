@@ -2,58 +2,79 @@
 
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-// You might need to install 'react-icons' for the menu bar icon: npm install react-icons
 import { FaBars, FaTimes } from 'react-icons/fa'; 
 
 function Navbar() {
-    // State to control the visibility of the mobile menu
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
+    // FIX: Use localStorage.getItem() directly
     const isLoggedIn = localStorage.getItem('userToken'); 
     const userRole = localStorage.getItem('userRole'); 
+    
+    // Check user roles
+    const isAdmin = userRole === 'admin'; 
+    const isProvider = userRole === 'provider';
+    const isPatient = userRole === 'patient'; 
 
-    // Define main navigation links
-    const mainLinks = [
-        { name: 'Dashboard', path: '/dashboard', requiredRole: 'admin' }, // Only visible to admin
-        { name: 'Pacientes', path: '/patients', requiredRole: 'all' },
-        { name: 'Doctores', path: '/about', requiredRole: 'all' },
-        // Add more static links here
+    // --- Dynamic Links ---
+    
+    const adminLinks = [
+        { name: 'Pacientes', path: '/admin/patients' },
+        { name: 'Doctores', path: '/admin/providers' },
+        { name: 'Vincular Proveedor', path: '/admin/link-provider' }, // Link for the API endpoint you worked on
     ];
+
+    const providerLinks = [
+        { name: 'Mis Citas', path: '/provider/appointments' },
+        { name: 'Mi Horario', path: '/provider/schedule' },
+    ];
+
+    const patientLinks = [
+        { name: 'Solicitar Cita', path: '/patient/request-appointment' },
+        { name: 'Mis Registros', path: '/patient/records' },
+    ];
+
+    const commonLinks = [
+        { name: 'Dashboard', path: '/dashboard' },
+    ];
+    
+    // Combine all relevant links based on role
+    const links = [...commonLinks];
+    
+    if (isAdmin) {
+        links.push(...adminLinks);
+    } else if (isProvider) {
+        links.push(...providerLinks);
+    } else if (isPatient) {
+        links.push(...patientLinks);
+    }
 
     const authLinks = (
         <>
             {isLoggedIn ? (
-                // LOGGED IN: Show Logout button and Role info
                 <>
                     <span className="text-white text-sm bg-indigo-500 py-1 px-3 rounded-full hidden lg:inline">
                         Rol: {userRole}
                     </span>
                     <Link 
                         to="/logout" 
-                        className="bg-white text-indigo-700 font-semibold py-2 px-4 rounded-md hover:bg-gray-100 transition-colors border border-white"
-                        onClick={() => setIsMenuOpen(false)} // Close menu on click
+                        className="bg-white text-indigo-700 font-semibold py-1 px-3 rounded-md hover:bg-gray-100 transition-colors border border-white"
+                        onClick={() => setIsMenuOpen(false)}
                     >
                         Cerrar Sesión
                     </Link>
                 </>
             ) : (
-                // LOGGED OUT: Show Signin link
                 <Link 
-                    to="/signin" 
-                    className="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 transition-colors"
-                    onClick={() => setIsMenuOpen(false)} // Close menu on click
+                    to="/" 
+                    className="bg-green-500 text-white font-semibold py-1 px-3 rounded-md hover:bg-green-600 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
                 >
                     Iniciar Sesión
                 </Link>
             )}
         </>
     );
-
-    // Filter links based on role (simple example)
-    const filteredLinks = mainLinks.filter(link => {
-        if (link.requiredRole === 'all') return true;
-        return link.requiredRole === userRole;
-    });
 
     return (
         <nav className="bg-indigo-700 p-4 shadow-xl relative z-20">
@@ -62,7 +83,7 @@ function Navbar() {
                 
                 {/* 1. Logo/Brand Link (Left Side) */}
                 <Link 
-                    to={isLoggedIn ? `/dashboard` : "/"}
+                    to={isLoggedIn ? `/dashboard` : "/"} 
                     className="text-white text-2xl font-extrabold tracking-wider hover:text-indigo-200 transition-colors z-30"
                 >
                     EPS System
@@ -70,7 +91,8 @@ function Navbar() {
 
                 {/* 2. Desktop Navigation (Hidden on small screens) */}
                 <div className="hidden lg:flex items-center space-x-6">
-                    {filteredLinks.map(link => (
+                    {/* Render Links */}
+                    {isLoggedIn && links.map(link => (
                         <NavLink 
                             key={link.name}
                             to={link.path}
@@ -84,8 +106,7 @@ function Navbar() {
                     {authLinks}
                 </div>
 
-
-                {/* 3. Mobile Menu Button (Visible on small screens) */}
+                {/* 3. Mobile Menu Button */}
                 <button 
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     className="text-white text-2xl lg:hidden z-30 focus:outline-none"
@@ -94,15 +115,15 @@ function Navbar() {
                 </button>
             </div>
 
-            {/* 4. Mobile Menu Sidebar (Appears from the right, mimicking your CSS) */}
+            {/* 4. Mobile Menu Sidebar */}
             <div 
                 className={`fixed top-0 right-0 h-full w-64 bg-gray-800 p-6 shadow-2xl transition-transform duration-300 transform z-20 lg:hidden 
                     ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`
                 }
             >
                 <div className="flex flex-col space-y-4 pt-16">
-                    {/* Render main links in the mobile menu */}
-                    {filteredLinks.map(link => (
+                    {/* Render ALL Links in the mobile menu */}
+                    {isLoggedIn && links.map(link => (
                         <NavLink 
                             key={link.name}
                             to={link.path}
@@ -118,7 +139,7 @@ function Navbar() {
                 </div>
             </div>
             
-            {/* Overlay to close the menu when clicking outside */}
+            {/* Overlay */}
             {isMenuOpen && (
                 <div 
                     className="fixed inset-0 bg-black opacity-50 z-10 lg:hidden"

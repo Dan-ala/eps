@@ -89,4 +89,62 @@ linkProvider(req, res) {
             });
         });
     },
+    getAllProviders(req, res) {
+        Provider.findAll((err, users) => {
+            if (err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Error al listar providers',
+                    error: err
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                message: 'Lista de providers',
+                data: users
+            });
+        });
+    },
+    getPotentialProviders (req, res){
+    Provider.findUsersWithoutSpecialty((err, users) => {
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: 'Error interno al obtener usuarios potenciales.',
+                error: err
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: 'Lista de usuarios con rol Provider sin especialidad asignada.',
+            data: users
+        });
+    });
+    },
+    assignSpecialty (req, res) {
+    const { usersId, specialty } = req.body; 
+
+    if (!usersId || !specialty) {
+        return res.status(400).send({ success: false, message: "usersId y specialty son campos obligatorios." });
+    }
+
+    const newProvider = { usersId: parseInt(usersId), specialty };
+
+    Provider.create(newProvider, (err, data) => {
+        if (err) {
+            const errMsg = err.code === 'ER_DUP_ENTRY' ? 'Este usuario ya tiene una especialidad asignada.' : 'Error al crear el registro de proveedor.';
+            
+            return res.status(500).send({ 
+                success: false, 
+                message: errMsg, 
+                error: err 
+            });
+        }
+        res.status(201).send({ 
+            success: true, 
+            message: "Especialidad asignada correctamente.", 
+            data 
+        });
+    });
+    },
 };
